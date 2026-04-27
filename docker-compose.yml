@@ -23,7 +23,7 @@ services:
       - redis
     restart: unless-stopped
   
-  reis:
+  redis:
     image: redis:7
     container_name: redis
     ports:
