@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   app:
-    build: .
+    image: sudheesh798/recommender-app:latest
     container_name: recommender_app
     ports:
       - "8000:8000"
@@ -12,9 +12,20 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-  
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/metrics || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   celery:
-    build: .
+    image: sudheesh798/recommender-app:latest
     container_name: celery_worker
     command: celery -A app.celery_app worker --loglevel=info
     env_file:
@@ -22,29 +33,44 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-  
+    networks:
+      - backend
+
   redis:
     image: redis:7
     container_name: redis
-    ports:
-      - "6379:6379"
     restart: unless-stopped
+    networks:
+      - backend
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
-    depends_on:
-      - app
-  
+    networks:
+      - backend
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana
     container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
     ports:
       - "3000:3000"
     depends_on:
       - prometheus
+    networks:
+      - backend
     restart: unless-stopped
+
+networks:
+  backend:
+
+volumes:
+  prometheus_data:
+  grafana_data:
