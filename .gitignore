@@ -1,5 +1,50 @@
-venv/
+# ========================
+# Python
+# ========================
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env/
+.venv/
+
+# ========================
+# Environment / Secrets
+# ========================
 .env
+.env.*
+!.env.example
+
+# ========================
+# Logs
+# ========================
 logs/
+*.log
+
+# ========================
+# Database / Dumps
+# ========================
+*.sql
+*.sqlite3
+
+# ========================
+# Docker
+# ========================
+docker-compose.override.yml
+
+# ========================
+# OS / Editor
+# ========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ========================
+# Testing / Cache
+# ========================
+.pytest_cache/
+.coverage
