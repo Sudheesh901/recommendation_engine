@@ -39,3 +39,12 @@ services:
       - "9090:9090"
     depends_on:
       - app
+  
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
