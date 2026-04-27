@@ -1,8 +1,11 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from app.routes import recommendation
 
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 @app.get("/")
 def read_root():
