@@ -9,4 +9,4 @@ celery_app = Celery(
 )
 
 
-celery_app.autodiscover_tasks(["app"])
+celery_app.autodiscover_tasks(["app.tasks"])
