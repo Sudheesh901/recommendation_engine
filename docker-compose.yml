@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+
+  app:
+    image: sudheesh798/recommender-app:latest
+    container_name: recommender_app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.docker
+    depends_on:
+      - redis
+    restart: unless-stopped
+  
+  celery:
+    image: sudheesh798/recommender-app:latest
+    container_name: celery_worker
+    command: celery -A app.celery_app worker --loglevel=info
+    env_file:
+      - .env.docker
+    depends_on:
+      - redis
+    restart: unless-stopped
+  
+  reis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
